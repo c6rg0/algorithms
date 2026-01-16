@@ -3,7 +3,7 @@ use std::mem;
 fn main() {
     binary_search();
     linear_search();
-    // binary_tree_sort();
+    binary_tree();
     bubble_sort();
 }
 
@@ -62,28 +62,44 @@ fn linear_search(){
     }
 }
 
-fn binary_tree_sort(){
-    let array: [i32; 14] = [9, 12, 14, 27, 28, 35, 41, 50, 52, 29, 60, 66, 68, 71]; 
+fn binary_tree(){
+    // target
+    // current_node - I'm assuming the left/right child
+    //               are being passed as current_node
+    
     let target: i32 = 71;
+    let mut current_node: i32 = 8;
+    binary_tree_search(target, current_node);
+}
+
+fn binary_tree_search(target: i32, mut current_node: i32){
+    // I don't know how to represent a bin tree as a data
+    // structure, this is severely changing the whole point.
+    let array: [i32; 14] = [9, 12, 14, 27, 28, 35, 41, 50, 52, 29, 60, 66, 68, 71]; 
     let last: usize = (array.len() / array[0].
         to_string().len()) - 1;
     
     let mut found: bool = false;
-    let current_node: i32 = 50;
-    let current_node_pos: i32 = 8;
+    let current_node_val: i32 = 50;
 
-    while found == false {
-        if target == current_node {
-            found = true;
-        }
-        else if target < current_node{
-            /*
-             * if left child exists
-            if array[].contains(){
+    if target == current_node_val {
+        found = true;
+    }
 
-            }
-            */
+    else if target < current_node_val{
+        current_node = current_node - 1;
+        if array[current_node as usize] == 0 {
+            return binary_tree_search(target, current_node);
+        } else {
+            found = false;
         }
+    }
+
+    current_node = current_node + 1;
+    if array[current_node as usize] == 0 {
+        return binary_tree_search (target, current_node);
+    } else {
+        found = false;
     }
 }
 
