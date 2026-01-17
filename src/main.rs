@@ -1,10 +1,36 @@
+use std::env;
 use std::mem;
 
 fn main() {
-    binary_search();
-    linear_search();
-    binary_tree();
-    bubble_sort();
+    let args: Vec<String> = env::args().collect();
+
+    if args[1].is_empty(){
+        help();
+        return;
+    } else{
+        match args[1].as_str(){
+            "--lns" => linear_search(),
+            "--bys" => binary_search(),
+            "--bts" => binary_tree(),
+            "--bls" => bubble_sort(),
+            _ => {
+                println!("Command {} unsuported", args[1]);
+                help();
+            }
+        }
+    }
+}
+
+fn help(){
+    println!("Algorithm practice project");
+    println!("Options:");
+    println!("Example of use: (./main -ln)");
+    println!("      -h    : Prints this message,");
+    println!("      --lns : Linear search,");
+    println!("      --bys : Binary search,");
+    println!("      --bts : Binary tree search,");
+    println!("      --bls : Bubble sort.");
+    println!();
 }
 
 fn binary_search(){
@@ -104,32 +130,37 @@ fn binary_tree_search(target: i32, mut current_node: i32){
 }
 
 fn bubble_sort() {
-    let array: [i32; 7] = [9, 2, 7, 1934, 13, 200, 1];
-    let last: usize = (array.len() / array[0].
-        to_string().len()) - 1;
-    let index: i32 = 0;
-    let j: i32 = 0;
-    let mut swapped: bool = false;
+    let mut array: [i32; 7] = [9, 2, 7, 1934, 13, 200, 1];
+    let len: usize = array.len();
+ 
     println!();
     println!("Bubble sort:");
+    println!("OG array:");
 
-    while swapped == false {
-        let len: i32 = (last as i32)-2;
-        for index in 0..len {
-            for j in 0..len-index-2 {
-                if array[j as usize] > array[(j + 1) as usize] {
-                    let mut x = array[(index + 1) as usize];
-                    let mut y = array[index as usize];
-                    println!("OG X: {x}");
-                    println!("OG Y: {y}");
-                    mem::swap(&mut x, &mut y);
-                    println!("Swapped X: {x}");
-                    println!("Swapped Y: {y}");
-                    swapped = true;
-                }
+    for i in 0..len{
+        let j: i32 = array[i as usize];
+        println!("{j}");
+    } println!();
+
+    for index in 0..len {
+        let mut swapped: bool = false;
+        
+        for j in 0..(len-index-1) {
+            if array[j as usize] > array[(j + 1) as usize] {
+                array.swap(j, j+1);
+                swapped = true;
             }
+        } if swapped == false {
+            break;
         }
     }
+
+    println!("New array:");
+    for i in 0..len{
+        let j: i32 = array[i as usize];
+        println!("{j}");
+    }
+
 }
 
 
