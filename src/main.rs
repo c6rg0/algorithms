@@ -13,6 +13,7 @@ fn main() {
             "--bys" => binary_search(),
             "--bts" => binary_tree(),
             "--bls" => bubble_sort(),
+            "-ts" => two_sum(),
             _ => {
                 println!("Command {} unsuported", args[1]);
                 help();
@@ -105,19 +106,21 @@ fn binary_tree_search(target: i32, mut current_node: i32){
     let last: usize = (array.len() / array[0].
         to_string().len()) - 1;
     
-    let mut found: bool = false;
     let current_node_val: i32 = 50;
 
     if target == current_node_val {
-        found = true;
+        let found: bool = true;
     }
+
+
+
 
     else if target < current_node_val{
         current_node = current_node - 1;
         if array[current_node as usize] == 0 {
             return binary_tree_search(target, current_node);
         } else {
-            found = false;
+            let found: bool = true;
         }
     }
 
@@ -125,7 +128,7 @@ fn binary_tree_search(target: i32, mut current_node: i32){
     if array[current_node as usize] == 0 {
         return binary_tree_search (target, current_node);
     } else {
-        found = false;
+        let found: bool = true;
     }
 }
 
@@ -163,7 +166,50 @@ fn bubble_sort() {
 
 }
 
+struct Solution {
+    return_array: Vec<i32>,
+    return_palidrome: i32,
+}
+
+impl Solution{
+    fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let mut i: i32 = 0;
+        let nums_size = nums.len();
+        let mut return_array: Vec<i32> = Vec::new();
+        while i < nums_size as i32
+        {
+            let mut j: i32 = 0;
+            while j < nums_size as i32
+            {
+                if i != j
+                {
+                    if nums[i as usize] + nums[j as usize] == target
+                    {
+                        println!("{i}{j}");
+                        return_array.push(i);
+                        return_array.push(j);
+                    }
+                }
+                j = j + 1;
+            }
+            i = i + 1;
+        }
+        return_array.truncate(2);
+        return_array
+    }
+    
+    /*
+    pub fn palindrome(x: i32) -> bool {
+        let judgment: bool = false;
+        let x_array: Vec<i32> = Vec::new();
 
 
 
+        judgment
+    }
+*/
+}
+
+
+ 
 
