@@ -173,6 +173,7 @@ struct Solution {
 
 impl Solution{
     fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+
         let mut i: i32 = 0;
         let nums_size = nums.len();
         let mut return_array: Vec<i32> = Vec::new();
@@ -197,19 +198,72 @@ impl Solution{
         return_array.truncate(2);
         return_array
     }
-    
-    /*
-    pub fn palindrome(x: i32) -> bool {
-        let judgment: bool = false;
-        let x_array: Vec<i32> = Vec::new();
 
+    pub fn is_palindrome(x: i32) -> bool {
+        /* most optimal solution, note: return would use less memory but for less speed
+        x.to_string().chars().rev().eq(x.to_string().chars())
+        */
 
+        // my solution...
+        let judgement: bool;
+        let mut x_len: usize = x.to_string().len();
+        if x < 0{
+            x_len = x_len - 1;
+        }
 
-        judgment
+        let mut x_vec: Vec<i32> = Vec::new(); 
+        println!("x = {x}");
+        let mut x = x;
+        let mut i = 0;
+
+        while i < x_len as i32
+        {
+            x_vec.push(x % 10);
+            i = i + 1;
+            x = x / 10
+        }
+        x_vec.reverse();
+
+        let first: i32;
+        if x_len == 1
+        {
+            first = x_vec[0];
+        }
+        else
+        {
+            first = x_vec[1];
+        }
+
+    let last: i32 = x_vec[x_len - 1];
+
+    if first > -1
+    {
+        if first == last{
+            let mut x_vec_r = x_vec.to_vec();
+            x_vec_r.reverse();
+            if x_vec_r == x_vec
+            {
+                judgement = true;
+            }
+            else
+            {
+                judgement = false;
+            }
+        }
+        else
+        {
+            judgement = false;
+        }
     }
-*/
+    else
+    {
+        judgement = false;
+    }
+
+    judgement
+}
 }
 
 
- 
+
 
