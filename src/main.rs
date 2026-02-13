@@ -261,7 +261,25 @@ impl Solution{
     }
 
     judgement
-}
+    }
+
+    pub fn roman_to_int(s: String) -> i32 {
+        let mut collected: i32 = 0; 
+        for index in 0..s.len() {
+            match s.chars().as_str() {
+                "I" => collected = collected + 1,
+                "V" => collected = collected + 5,
+                "X" => collected = collected + 10,
+                "L" => collected = collected + 50,
+                "C" => collected = collected + 100,
+                "D" => collected = collected + 500,
+                "M" => collected = collected + 1000,
+                _ => ()
+            }
+            println!("{collected}");
+        }
+        collected
+    }
 }
 
 
