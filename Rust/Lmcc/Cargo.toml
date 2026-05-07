@@ -1,0 +1,11 @@
+[package]
+name = "lmcc"
+version = "0.1.0"
+edition = "2024"
+description = "Little man's computer collection"
+
+[dependencies]
+
+[[bin]]
+name = "lmcc"
+path = "src/main.rs"

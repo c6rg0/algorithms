@@ -13,7 +13,7 @@ fn main() {
             "--bys" => binary_search(),
             "--bts" => binary_tree(),
             "--bls" => bubble_sort(),
-            "-ts" => two_sum(),
+            // "-ts" => two_sum(),
             _ => {
                 println!("Command {} unsuported", args[1]);
                 help();
