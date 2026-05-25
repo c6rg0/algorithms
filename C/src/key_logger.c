@@ -1,86 +1,47 @@
-/*
- * Copyleft Creative Commons Attribution-Share Alike 4.0 International (CC BY-SA 4.0)
- * License holder: jtyrrell
- * Date: 07-13-2012, 07:54 AM 
- * Source: https://www.linuxquestions.org/questions/linux-general-1/reading-and-writing-to-the-linux-keyboard-buffer-4175416506/
- */
+// Purpose: It scans the input buffer to retrieve the scan code and writes
+// it to a file (not forever).
 
-/*
- * Purpose: It writes KEY_(...) to input buffer, it mimicks the press of
- * a key, it then scans the input buffer to retrieve the scan code.
- * Requirement: Use root.
- */
+// Requirement: Use root and don't use wayland: if you are, drop to tty (ctrl+alt+2) 
 
 #include <stdio.h>
 #include <fcntl.h> // File control options
 #include <linux/input.h> 
 #include <unistd.h> // open(), write(), close()
-
-#define EV_PRESSED 1
-#define EV_RELEASED 0
-#define EV_REPEAT 2
+#include <stdlib.h>
+#include <stddef.h>
+#include <sys/ioctl.h>
 
 int main()
 {
-    printf("Starting the keyboard buffer writer/reader \n");
-    int fd = 0;
+    printf("> Starting the keyboard buffer reader \n");
 
-    // This is the keyboard device as identified using:
-    // $ cat /proc/bus/input/devices
-    char *device = "/dev/input/event0"; 
-
-    /* Write a key to the keyboard buffer,
-     * IDK what "> 0" does here? */
-    if ((fd = open(device, O_RDWR)) > 0)
-    {
-        struct input_event event;
-
-        // Press a key 
-        event.type = EV_KEY;
-        event.value = EV_PRESSED;
-        // https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
-        event.code = KEY_0;
-
-        write(fd, &event, sizeof(struct input_event));
-
-        // Release the key
-        event.value = EV_RELEASED;
-        event.code = KEY_0;
-
-        write(fd, &event, sizeof(struct input_event));
-        close(fd);
-
-        printf("The keyboard code is: %d \n", KEY_0); 
+    int fd = open("/dev/input/event0", O_RDONLY);
+    if (fd == -1) {
+        perror("open");
+        return 1;
     }
 
-    /* Read the key back from the keyboard buffer */
-    int fd1 = 0;
-    if ((fd1 = open(device, O_RDONLY)) > 0)
+    ioctl(fd, EVIOCGRAB, 1); // All key events go to this program
+    struct input_event event;
+
+    int i = 1;
+    while (i < 67)
     {
-        unsigned int scan_code = 0;
-        struct input_event event;
+        ssize_t res = read(fd, &event, sizeof(event));
+        printf("type=%d code=%d value=%d\n", event.type, event.code, event.value);
 
-        if(event.type != EV_KEY)
+        if (res == sizeof(event) && event.type == EV_KEY && event.value == 1)
         {
-            // Keyboard events are always of type EV_KEY
-            return 0; 
+            printf("Read back scan_code is: %u\n", event.code);
+
+            FILE *fptr;
+            fptr = fopen("/tmp/KEY_LOGGER", "a");
+            fprintf(fptr, "%u\n", event.code);
+            fclose(fptr);
+            i++;
         }
-
-        if(event.value == EV_RELEASED)
-        {
-            scan_code = event.code;
-            printf("Read back scan_code is: %d \n", scan_code);
-
-            // $ date | sha256sum | cut -c1-10
-            char *log = "/temp/32658abcf7"; 
-            int log_fd = 0;
-
-            log_fd = open(log, O_RDWR);
-            write(log_fd, &scan_code, sizeof(struct input_event));
-            close(log_fd);
-        }
-
-        close(fd1);
     }
+
+    close(fd);
+    return 0;
 }
-
